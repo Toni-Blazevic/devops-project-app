@@ -43,7 +43,7 @@ jobs:
         with:
           image-ref: ticketing-api:latest
           format: table
-          exit-code: "0"
+          exit-code: "1"
           severity: CRITICAL,HIGH
         
       - name: Scan Worker image
@@ -51,7 +51,7 @@ jobs:
         with:
           image-ref: ticketing-worker:latest
           format: table
-          exit-code: "0"
+          exit-code: "1"
           severity: CRITICAL,HIGH
 
       - name: Scan Frontend image
@@ -59,7 +59,7 @@ jobs:
         with:
           image-ref: ticketing-frontend:latest
           format: table
-          exit-code: "0"
+          exit-code: "1"
           severity: CRITICAL,HIGH
 
       - name: Login to Docker Hub
