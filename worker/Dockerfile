@@ -13,9 +13,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
-COPY --chown=node:node package*.json ./
 COPY --chown=node:node src ./src
+
+RUN rm -rf /usr/local/lib/node_modules/npm \
+    && rm -f /usr/local/bin/npm /usr/local/bin/npx
 
 USER node
 
-CMD ["npm", "start"]
+CMD ["node", "src/worker.js"]
