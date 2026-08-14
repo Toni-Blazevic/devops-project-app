@@ -1,9 +1,21 @@
-FROM node:22-alpine as dependencies
+FROM node:22-alpine AS dependencies
 
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install --omit=dev
+
+
+FROM node:22-alpine AS development
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY src ./src
+
+CMD ["npm", "run", "dev"]
 
 
 FROM node:22-alpine AS runtime

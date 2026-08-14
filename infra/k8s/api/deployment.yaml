@@ -23,7 +23,7 @@ spec:
 
       containers:
         - name: api
-          image: toni680/ticketing-api:latest
+          image: toni680/ticketing-api:v2
           imagePullPolicy: IfNotPresent
           
           ports:

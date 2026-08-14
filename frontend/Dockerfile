@@ -1,9 +1,21 @@
-FROM node:22-alpine as dependencies
+FROM node:22-alpine AS dependencies
 
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install --omit=dev
+
+
+FROM node:22-alpine AS development
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY src ./src
+
+CMD ["npm", "run", "dev"]
 
 
 FROM node:22-alpine AS runtime
@@ -18,8 +30,8 @@ COPY --chown=node:node src ./src
 RUN rm -rf /usr/local/lib/node_modules/npm \
     && rm -f /usr/local/bin/npm /usr/local/bin/npx
 
-EXPOSE 3000
-
 USER node
+
+EXPOSE 3000
 
 CMD ["node", "src/server.js"]
