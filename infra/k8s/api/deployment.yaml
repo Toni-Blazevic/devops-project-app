@@ -18,6 +18,9 @@ spec:
         app: api
   
     spec:
+
+      serviceAccountName: api-sa
+
       containers:
         - name: api
           image: toni680/ticketing-api:latest

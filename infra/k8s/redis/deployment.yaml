@@ -18,6 +18,9 @@ spec:
         app: redis
 
     spec:
+
+      serviceAccountName: redis-sa
+
       containers:
         - name: redis
           image: redis:8-alpine

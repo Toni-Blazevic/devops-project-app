@@ -18,6 +18,9 @@ spec:
         app: worker
 
     spec:
+
+      serviceAccountName: worker-sa
+
       containers:
         - name: worker
           image: toni680/ticketing-worker:latest
