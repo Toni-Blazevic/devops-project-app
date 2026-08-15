@@ -11,7 +11,7 @@ const pgPool = new Pool({
     user: process.env.POSTGRES_USER || "ticketing_user",
     password: process.env.POSTGRES_PASSWORD || "change_me_local"
 });
-
+//test
 const redisClient = createClient({
     socket: {
         host: process.env.REDIS_HOST || "redis",
