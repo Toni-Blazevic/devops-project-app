@@ -77,51 +77,58 @@ Osnovni workflow aplikacije:
 5. Worker preuzima narudžbu.
 6. Worker sprema obrađenu narudžbu u PostgreSQL
 
+## Kubernetes deployment
+
+Kubernetes manifesti nalaze se u direktoriju:
+
+infra/k8s/
+
+Struktura uključuje Deployment i Service manifeste za API, frontend, PostgreSQL i Redis, Worker Deployment, ConfigMap, Secret, PersistentVolumeClaim, Ingress, NetworkPolicy i ServiceAccount objekte.
+
+##Deploy aplikacije
+
+Sve manifeste moguće je prijmejniti rekurzivno:
+kubectl apply -f infra/k8s/namespace.yaml
+kubectl apply -R -f infra/k8s
+
+Provjera Podova:
+kubectl get pods -n ticketing
+
+Provjera servisa:
+kubectl get services -n ticketing
+
+Provjera Ingressa:
+kubectl get ingress -n ticketing
+
+Provjera NetworkPolicy pravila:
+kubectl get networkpolicy -n ticketing
+
+Provjera ServiceAccount objekata:
+kubectl get serviceaccounts -n ticketing
 
 
-Ovaj repozitorij je referentni uzorak aplikacije za kolegij **Uvod u DevOps - DevSecOps**.
-Prikazuje cijeli tok: lokalni razvoj kroz Compose i produkcijski deployment kroz Kubernetes manifeste.
+## Pristup aplikaciji
 
-## Arhitektura
+Nakon uspješnog deploymenta frontend je dostupan preko Ingressa:
+http://localhost
 
-- `frontend` - web UI za pregled evenata i kupnju karata
-- `api` - REST API za evente, narudzbe i health provjere
-- `worker` - pozadinska obrada queue poruka
-- `postgres` - trajna pohrana narudzbi
-- `redis` - queue/cache sloj
+API health endpoint:
+http://localhost/api/healthz
 
-### Brza validacija funkcionalnosti
 
-1. Health API:
-   ```bash
-   curl http://localhost:8080/healthz
-   curl http://localhost:8080/readyz
-   ```
-2. Dohvati evente:
-   ```bash
-   curl http://localhost:8080/events
-   ```
-3. Posalji narudzbu:
-   ```bash
-   curl -X POST http://localhost:8080/tickets/purchase \
-     -H "Content-Type: application/json" \
-     -d '{"eventId":"evt-1001","customerEmail":"student@example.com","quantity":2}'
-   ```
-4. Provjeri obradene narudzbe:
-   ```bash
-   curl http://localhost:8080/tickets/orders
-   ```
-5. UI:
-   - Otvori `http://localhost:3000`
+## Rolling update
 
-## Sigurnosni elementi
+Status rollouta API Deploymenta:
+kubectl rollout status deployment/api -n ticketing
 
-- Multi-stage Docker build i non-root runtime korisnik
-- Secret + ConfigMap odvojena konfiguracija
-- Liveness/Readiness probe
-- Resource requests/limits
-- ServiceAccount + RBAC
-- NetworkPolicy segmentacija
-- Trivy skeniranje slika u CI pipelineu
+Povijest revizija:
+kubectl rollout history deployment/api -n ticketing
 
-Detalji skeniranja: `docs/security/image-scan-report.md`
+##Rollback
+
+Povratak na prethodnu reviziju:
+kubectl rollout undo deployment/api -n ticketing
+
+Nakon rollbacka:
+kubectl rollout status deployment/api -n ticketing
+
