@@ -73,16 +73,25 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker tag ticketing-api:latest ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-api:latest
+          docker tag ticketing-api:latest ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-api:${{ github.sha }}
+
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-api:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-api:${{ github.sha }}
 
       - name: Push Worker image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker tag ticketing-worker:latest ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-worker:latest
+          docker tag ticketing-worker:latest ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-worker:${{ github.sha }}
+
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-worker:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-worker:${{ github.sha }}
 
       - name: Push Frontend image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           docker tag ticketing-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-frontend:latest
+          docker tag ticketing-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-frontend:${{ github.sha }}
+
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-frontend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ticketing-frontend:${{ github.sha }}

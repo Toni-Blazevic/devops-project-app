@@ -50,3 +50,11 @@ Development imageovi odvojeni su od production runtime imageova. Development sta
 CI pipeline je konfiguriran tako da HIGH ili CRITICAL ranjivost uzrokuje neuspjeh security scan koraka.
 
 Time se sprječava objavljivanje production imagea koji ne zadovoljava definirani sigurnosni prag.
+
+
+## Verzioniranje Docker imageova
+
+Docker imageovi objavljuju se s dva taga:
+
+- latest označava najnoviji uspješni build s main grane.
+- Git commit SHA koristi se kao jedinstveni tag koji omogućuje povezivanje Docker imagea s točnim commitom iz kojeg je izgrađen.
