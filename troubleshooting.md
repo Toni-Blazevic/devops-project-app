@@ -74,3 +74,46 @@ kubectl rollout history deployment/api -n ticketing
 
 Ako nova verzija ne radi, moguće je vratiti prethodnu:
 kubectl rollout undo deployment/api -n ticketing
+
+
+## Incident scenarios
+
+### 1. API ImagePullBackOff
+
+API Pod nije se mogao pokrenuti i bio je u stanju:
+ErrImagePull
+ImagePullBackOff
+
+### Dijagnostika
+
+Korištene su naredbe:
+kubectl get pods -n ticketing
+kubectl describe pod -l app=api -n ticketing
+
+U Events dijelu vidjelo se da Kubernetes pokušava dohvatiti image koji ne postoji ili nije dostupan u Docker Hub registryju.
+
+### Uzrok
+
+Deployment je referencirao pogrešan Docker image/tag.
+
+### Korektivna mjera
+
+Image je ispravno tagiran i pushan u Docker Hub, a Deployment je ažuriran da koristi ispravan image.
+
+
+### 2. Hot reload nije detektirao promjene na Windows/Docker Desktop okruženju
+
+Nodemon je bio pokrenut, ali promjena u `src` datoteci nije uzrokovala restart aplikacije.
+
+### Uzrok
+
+File-system eventi iz Windows bind mounta nisu se pouzdano propagirali u container.
+
+### Korektivna mjera
+
+Nodemon je prebačen na legacy polling način rada:
+
+"dev": "nodemon -L src/server.js"
+
+
+
